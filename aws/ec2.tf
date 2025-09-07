@@ -20,17 +20,16 @@ resource "aws_security_group" "ssh_my_ip" {
 }
 
 resource "aws_instance" "my_ec2" {
-
-  instance_type               = "t2.micro"
-  ami                         = var.ec2_ami
+  instance_type               = var.ec2_config.instance_type
+  ami                         = var.ec2_config.ami
+  key_name                    = var.ec2_config.ssh_key_name
   subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.ssh_key_name
   vpc_security_group_ids      = [aws_security_group.ssh_my_ip.id]
   associate_public_ip_address = true
 
   root_block_device {
-    volume_size           = 24 # GB
-    volume_type           = "gp2"
+    volume_size           = var.ec2_config.storage_size
+    volume_type           = var.ec2_config.storage_type
     delete_on_termination = true
   }
 

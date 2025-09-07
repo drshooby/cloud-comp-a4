@@ -2,10 +2,25 @@ variable "my_ip" {
   type = list(string)
 }
 
-variable "ec2_ami" {
-  type    = string
-  default = "ami-0360c520857e3138f" // ubuntu x86
+// From tutorial
+variable "ec2_config" {
+  type = object({
+    ami           = string
+    instance_type = string
+    storage_size  = number
+    storage_type  = string
+    ssh_key_name  = string
+  })
+
+  default = {
+    ami           = "ami-0360c520857e3138f"
+    instance_type = "t2.micro"
+    storage_size  = 24 // GB
+    storage_type  = "gp2"
+    ssh_key_name  = "cloud-computing-kp"
+  }
 }
+
 
 variable "aws_region" {
   type        = string
@@ -41,10 +56,4 @@ variable "private_subnet_cidrs" {
   type        = list(string)
   default     = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
   description = "Private subnet CIDR blocks."
-}
-
-variable "ssh_key_name" {
-  type        = string
-  default     = "cloud-computing-kp"
-  description = "SSH key name."
 }
