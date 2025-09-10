@@ -10,7 +10,7 @@ terraform {
 
 // https://registry.terraform.io/providers/hashicorp/google/latest/docs
 provider "google" {
-  project = "cloud-computing-a4-471403"
+  project = "cloud-computing-471600"
   region  = "us-west1"
   zone    = "us-west1-a"
 }
