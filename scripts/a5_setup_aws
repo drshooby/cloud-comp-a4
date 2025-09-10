@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -euo pipefail
+
+if [ "$#" -ne 1 ]; then
+  echo "Usage: <PEM_FILE_LOCATION>"
+  exit 1
+fi
+
+FILE_LOCATION=$1
+
+# Runs in a subshell...
+(
+  cd ../aws
+  terraform init
+  terraform plan
+  terraform apply -auto-approve
+  EC2_PUBLIC_IP=$(terraform output -raw public_ip)
+
+  cd ../scripts
+  echo "Waiting a few seconds for SSH to be available"
+  sleep 3
+  echo "Sleep done!"
+  python3 start_ec2_server.py "$EC2_PUBLIC_IP" "$1"
+
+  echo "Script complete! Don't forget to terraform destroy."
+)

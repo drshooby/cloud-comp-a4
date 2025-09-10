@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# Must have:
+# Project configured with: gcloud config set project PROJECT_ID
+
+# Runs in a subshell...
+(
+  cd ../gcp
+  terraform init
+  terraform plan
+  terraform apply -auto-approve
+  GCE_PUBLIC_IP=$(terraform output -raw public_ip)
+
+  cd ../scripts
+  until gcloud compute ssh terraform-vm --zone us-west1-a --command "echo ok" >/dev/null 2>&1; do
+    echo "Waiting for ssh to be available..."
+    sleep 3
+  done
+  gcloud compute scp start_server.py ubuntu@terraform-vm:/home/ubuntu/ --zone us-west1-a
+  gcloud compute ssh ubuntu@terraform-vm \
+  --zone us-west1-a \
+  --command "nohup python3 /home/ubuntu/start_server.py >/dev/null 2>&1 &"
+
+  echo "Script complete! Visit: http://${GCE_PUBLIC_IP}:8080. Don't forget to terraform destroy."
+)
