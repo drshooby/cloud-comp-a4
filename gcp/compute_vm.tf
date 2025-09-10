@@ -1,17 +1,4 @@
-resource "google_compute_firewall" "http_firewall" {
-  name    = "allow-ssh"
-  network = "default"
-
-  allow {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-
-  source_ranges = var.my_ip
-  target_tags   = ["ssh-server"]
-}
-
-resource "google_compute_instance" "ssh_vm" {
+resource "google_compute_instance" "super_cool_gce" {
   name         = "terraform-vm"
   machine_type = "e2-medium"
 
