@@ -13,8 +13,8 @@ resource "aws_security_group" "ssh_my_ip" {
 }
 
 resource "aws_security_group" "server_access_my_ip" {
-  name        = "https from my ip"
-  description = "security group that only allows https access through my ip"
+  name        = "http from my ip"
+  description = "security group that only allows http access through my ip"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
@@ -26,7 +26,7 @@ resource "aws_security_group" "server_access_my_ip" {
   }
 
   ingress {
-    description = "Go server from my IP"
+    description = "Python server from my IP"
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
